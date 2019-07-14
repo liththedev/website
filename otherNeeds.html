@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script>
+$(document).ready(function(){
+  $("button").click(function(){
+  	 let realm = $("#realm").val();
+  	 let username = $("#username").val();
+     $.ajax({url: "https://us.api.blizzard.com/wow/character/" + realm + "/" + username + "?fields=pets&locale=en_US&access_token=USRh5Cnpon6CkE8UaXHwtPtV8sV3cgPAO9", success: function(result){
+      $("#div1").html("local otherHas = Set {" + result.pets.collected.map(x=>"\""+x.name+"\"").join(", ") + "}");
+    }});
+  });
+});
+</script>
+</head>
+<body>
+<div>
+This tool will generate a rematch script that will filter your pets to show which pets are unowned by another player (and tradable by you).
+</div>
+<div>
+Instructions for use: 
+<ol>
+  <li>Enter the realm and username of the other player and click generate.</li>
+  <li>Copy the generated script below</li>
+  <li>In rematch select filter (next to the pet search bar) > script > new script</li>
+  <li>Paste the script in the large textbox</li>
+  <li>Give your new script a name</li>
+  <li>Click Save</li>
+  <li>The new filter will be automatically enabled, if you wish to toggle it on/off, click filter > script > [the name you gave your script]
+</ol>
+Note that the blizzard API does not update constantly, so the list may be out of date.
+Also note that this filter is static and will not update itself when the other player gets more pets. You will have to regenerate this script to update it.
+</div>
+
+<div>realm: <input type="text" id="realm"></div>
+<div>username: <input type="text" id="username"></div>
+<button>Generate script</button>
+
+<pre>
+function Set (list)
+  local set = {}
+  for _, l in ipairs(list) do set[l] = true end
+  return set
+end
+
+</pre>
+<pre id="div1"></pre>
+<pre>return not otherHas[name] and tradable</pre>
+
+</body>
+</html>
